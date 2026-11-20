@@ -1,0 +1,16 @@
+const FAVORITES_KEY = "library_favorite_ids";
+
+export function loadFavorites(): Set<string> {
+  try {
+    const raw = localStorage.getItem(FAVORITES_KEY);
+    if (!raw) return new Set();
+    const parsed: string[] = JSON.parse(raw);
+    return new Set(parsed);
+  } catch {
+    return new Set();
+  }
+}
+
+export function saveFavorites(favoriteIds: Set<string>): void {
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(Array.from(favoriteIds)));
+}
