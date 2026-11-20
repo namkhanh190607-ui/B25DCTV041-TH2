@@ -1,0 +1,51 @@
+import { Book } from "./types";
+
+// Nếu dùng mockapi.io, dán URL endpoint vào đây (VD: "https://xxxx.mockapi.io/api/v1/books")
+// Để trống "" sẽ tự động đọc từ file ./books.json
+export const MOCKAPI_URL = "";
+
+export async function fetchBooks(): Promise<Book[]> {
+  const endpoint = MOCKAPI_URL.trim() !== "" ? MOCKAPI_URL : "./books.json";
+  const response = await fetch(endpoint);
+
+  if (!response.ok) {
+    throw new Error(`Không thể tải dữ liệu sách (Mã lỗi: ${response.status})`);
+  }
+
+  const data: Book[] = await response.json();
+  return data;
+}
+
+export async function createBookOnServer(newBook: Omit<Book, "id">): Promise<Book> {
+  if (MOCKAPI_URL.trim() !== "") {
+    const response = await fetch(MOCKAPI_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newBook),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Lỗi khi gửi sách lên MockAPI (Mã lỗi: ${response.status})`);
+    }
+
+    return await response.json();
+  }
+
+  // Trường hợp dùng books.json cục bộ
+  return {
+    id: "S" + Date.now().toString().slice(-4),
+    ...newBook,
+  };
+}
+
+export async function deleteBookOnServer(id: string): Promise<void> {
+  if (MOCKAPI_URL.trim() !== "") {
+    const response = await fetch(`${MOCKAPI_URL}/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Lỗi khi xóa sách trên MockAPI (Mã lỗi: ${response.status})`);
+    }
+  }
+}
