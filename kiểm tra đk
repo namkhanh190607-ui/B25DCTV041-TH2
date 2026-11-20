@@ -1,0 +1,25 @@
+import { BookFormInput, ValidationErrors } from "./types";
+
+export function validateBookForm(input: BookFormInput): ValidationErrors {
+  const errors: ValidationErrors = {};
+  const currentYear = new Date().getFullYear();
+
+  if (input.title.trim().length < 3) {
+    errors.title = "Tên sách phải có từ 3 ký tự trở lên.";
+  }
+
+  if (input.author.trim().length === 0) {
+    errors.author = "Tác giả không được để trống.";
+  }
+
+  if (input.genre.trim() === "") {
+    errors.genre = "Vui lòng chọn thể loại sách.";
+  }
+
+  const yearNum = Number(input.year);
+  if (!input.year.trim() || !Number.isInteger(yearNum) || yearNum < 1900 || yearNum > currentYear) {
+    errors.year = `Năm xuất bản phải từ 1900 đến ${currentYear}.`;
+  }
+
+  return errors;
+}
