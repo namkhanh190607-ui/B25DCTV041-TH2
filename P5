@@ -1,0 +1,259 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background-color: #f1f5f9;
+  color: #1e293b;
+  line-height: 1.5;
+}
+
+.container {
+  width: 92%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+.site-header {
+  background-color: #1e3a8a;
+  color: #ffffff;
+  padding: 18px 0;
+  margin-bottom: 24px;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.site-header h1 {
+  font-size: 1.5rem;
+}
+
+.fav-badge {
+  background-color: rgba(255, 255, 255, 0.16);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+}
+
+/* PANEL */
+.panel {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.panel h2 {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  color: #0f172a;
+}
+
+/* FORM THÊM SÁCH (FLEXBOX) */
+.book-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 200px;
+}
+
+.form-group label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.form-group input,
+.form-group select,
+.search-box,
+.filter-select {
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background-color: #ffffff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.search-box:focus,
+.filter-select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.error-msg {
+  color: #dc2626;
+  font-size: 0.8rem;
+  min-height: 18px;
+  margin-top: 3px;
+}
+
+/* TOOLBAR (FLEXBOX) */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.search-box {
+  flex: 1 1 260px;
+}
+
+.filter-select {
+  flex: 0 1 220px;
+}
+
+.status-bar {
+  padding: 10px 14px;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.status-bar.error {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+/* LƯỚI THẺ SÁCH BẰNG FLEXBOX: 3 CỘT TRÊN MÁY TÍNH */
+.book-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.book-card {
+  flex: 0 0 calc((100% - 32px) / 3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  background-color: #f8fafc;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.book-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.book-code {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.book-title {
+  font-size: 1.08rem;
+  font-weight: 700;
+  margin: 4px 0 8px;
+  color: #0f172a;
+}
+
+.book-meta {
+  font-size: 0.9rem;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.genre-tag {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: 0.2s;
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  margin-top: 23px;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-fav.active {
+  background-color: #ffe4e6;
+  border-color: #fda4af;
+  color: #be123c;
+}
+
+.btn-delete {
+  background-color: #fee2e2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.btn-delete:hover {
+  background-color: #fecaca;
+}
+
+/* FOOTER */
+.site-footer {
+  text-align: center;
+  padding: 20px 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* RESPONSIVE: 1 CỘT TRÊN ĐIỆN THOẠI */
+@media (max-width: 768px) {
+  .book-card {
+    flex: 0 0 100%;
+  }
+
+  .btn-primary {
+    width: 100%;
+    margin-top: 4px;
+  }
+}
