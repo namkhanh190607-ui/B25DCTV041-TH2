@@ -1,0 +1,14 @@
+export const booksData = [
+  { id: "S01", title: "Lập trình Web hiện đại", author: "Nguyễn Văn An", genre: "Công nghệ thông tin", year: 2023 },
+  { id: "S02", title: "Cấu trúc dữ liệu và Giải thuật", author: "Trần Minh Tuấn", genre: "Công nghệ thông tin", year: 2021 },
+  { id: "S03", title: "Clean Code - Mã sạch", author: "Robert C. Martin", genre: "Công nghệ thông tin", year: 2008 },
+  { id: "S04", title: "Nhà giả kim", author: "Paulo Coelho", genre: "Văn học", year: 1988 },
+  { id: "S05", title: "Dế Mèn phiêu lưu ký", author: "Tô Hoài", genre: "Văn học", year: 1941 },
+  { id: "S06", title: "Tuổi thơ dữ dội", author: "Phùng Quán", genre: "Văn học", year: 1988 },
+  { id: "S07", title: "Đắc nhân tâm", author: "Dale Carnegie", genre: "Kỹ năng sống", year: 1936 },
+  { id: "S08", title: "Atomic Habits - Thay đổi tí hon", author: "James Clear", genre: "Kỹ năng sống", year: 2018 },
+  { id: "S09", title: "Tư duy nhanh và chậm", author: "Daniel Kahneman", genre: "Kỹ năng sống", year: 2011 },
+  { id: "S10", title: "Lược sử thời gian", author: "Stephen Hawking", genre: "Khoa học", year: 1988 },
+  { id: "S11", title: "Vũ trụ trong vỏ hạt dẻ", author: "Stephen Hawking", genre: "Khoa học", year: 2001 },
+  { id: "S12", title: "Sapiens: Lược sử loài người", author: "Yuval Noah Harari", genre: "Khoa học", year: 2014 }
+];
