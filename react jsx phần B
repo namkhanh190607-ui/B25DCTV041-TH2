@@ -1,0 +1,59 @@
+import { useState } from "react";
+import { booksData } from "./data/booksData";
+import Header from "./components/Header";
+import Section from "./components/Section";
+import GenreFilter from "./components/GenreFilter";
+import BookList from "./components/BookList";
+import Footer from "./components/Footer";
+import "./App.css";
+
+export default function App() {
+  const [selectedGenre, setSelectedGenre] = useState("Tất cả");
+  const [favoriteIds, setFavoriteIds] = useState([]);
+
+  const genres = ["Tất cả", ...new Set(booksData.map((book) => book.genre))];
+
+  const filteredBooks =
+    selectedGenre === "Tất cả"
+      ? booksData
+      : booksData.filter((book) => book.genre === selectedGenre);
+
+  const handleToggleFavorite = (bookId) => {
+    setFavoriteIds((prev) =>
+      prev.includes(bookId)
+        ? prev.filter((id) => id !== bookId)
+        : [...prev, bookId]
+    );
+  };
+
+  return (
+    <div className="app">
+      <Header
+        libraryName="Thư Viện Của Lớp"
+        favoriteCount={favoriteIds.length}
+      />
+
+      <main className="container">
+        <Section title="Danh mục sách thư viện">
+          <GenreFilter
+            genres={genres}
+            selectedGenre={selectedGenre}
+            onSelectGenre={setSelectedGenre}
+          />
+
+          <p className="status-bar">
+            Đang hiển thị {filteredBooks.length} / {booksData.length} cuốn
+          </p>
+
+          <BookList
+            books={filteredBooks}
+            favoriteIds={favoriteIds}
+            onToggleFavorite={handleToggleFavorite}
+          />
+        </Section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
