@@ -1,0 +1,12 @@
+export default function Header({ libraryName, favoriteCount }) {
+  return (
+    <header className="site-header">
+      <div className="container header-inner">
+        <h1>📚 {libraryName}</h1>
+        <div className="fav-badge">
+          ❤️ Sách yêu thích: <strong>{favoriteCount}</strong>
+        </div>
+      </div>
+    </header>
+  );
+}
