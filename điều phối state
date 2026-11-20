@@ -1,0 +1,178 @@
+import { Book, BookFormInput } from "./types";
+import { fetchBooks, createBookOnServer, deleteBookOnServer } from "./api";
+import { loadFavorites, saveFavorites } from "./storage";
+import { validateBookForm } from "./validate";
+import { renderGenreOptions, createBookCardElement } from "./render";
+
+let allBooks: Book[] = [];
+const favoriteIds: Set<string> = loadFavorites();
+
+// DOM Elements
+const favCountEl = document.getElementById("fav-count") as HTMLElement;
+const statusBarEl = document.getElementById("status-bar") as HTMLElement;
+const bookListEl = document.getElementById("book-list") as HTMLElement;
+const searchInputEl = document.getElementById("search-input") as HTMLInputElement;
+const genreFilterEl = document.getElementById("genre-filter") as HTMLSelectElement;
+
+// Form Elements
+const addFormEl = document.getElementById("add-book-form") as HTMLFormElement;
+const titleInputEl = document.getElementById("book-title") as HTMLInputElement;
+const authorInputEl = document.getElementById("book-author") as HTMLInputElement;
+const genreInputEl = document.getElementById("book-genre") as HTMLSelectElement;
+const yearInputEl = document.getElementById("book-year") as HTMLInputElement;
+
+const errTitleEl = document.getElementById("error-title") as HTMLElement;
+const errAuthorEl = document.getElementById("error-author") as HTMLElement;
+const errGenreEl = document.getElementById("error-genre") as HTMLElement;
+const errYearEl = document.getElementById("error-year") as HTMLElement;
+
+function updateFavHeader(): void {
+  const validFavCount = allBooks.filter((b) => favoriteIds.has(b.id)).length;
+  favCountEl.textContent = String(validFavCount);
+}
+
+function renderFilteredBooks(): void {
+  const keyword = searchInputEl.value.trim().toLowerCase();
+  const selectedGenre = genreFilterEl.value;
+
+  const filtered = allBooks.filter((book) => {
+    const matchTitle = book.title.toLowerCase().includes(keyword);
+    const matchGenre = selectedGenre === "all" || book.genre === selectedGenre;
+    return matchTitle && matchGenre;
+  });
+
+  statusBarEl.classList.remove("error");
+  statusBarEl.textContent = `Đang hiển thị ${filtered.length} / ${allBooks.length} cuốn`;
+
+  bookListEl.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+  filtered.forEach((book) => {
+    const card = createBookCardElement(book, favoriteIds.has(book.id));
+    fragment.appendChild(card);
+  });
+  bookListEl.appendChild(fragment);
+}
+
+function getFormValues(): BookFormInput {
+  return {
+    title: titleInputEl.value,
+    author: authorInputEl.value,
+    genre: genreInputEl.value,
+    year: yearInputEl.value,
+  };
+}
+
+function showFieldError(field: keyof BookFormInput): boolean {
+  const errors = validateBookForm(getFormValues());
+  if (field === "title") errTitleEl.textContent = errors.title || "";
+  if (field === "author") errAuthorEl.textContent = errors.author || "";
+  if (field === "genre") errGenreEl.textContent = errors.genre || "";
+  if (field === "year") errYearEl.textContent = errors.year || "";
+  return Object.keys(errors).length === 0;
+}
+
+// Báo lỗi ngay khi gõ/chọn
+titleInputEl.addEventListener("input", () => showFieldError("title"));
+authorInputEl.addEventListener("input", () => showFieldError("author"));
+genreInputEl.addEventListener("change", () => showFieldError("genre"));
+yearInputEl.addEventListener("input", () => showFieldError("year"));
+
+// Xử lý submit thêm sách mới (hiển thị ở đầu danh sách)
+addFormEl.addEventListener("submit", async (e: Event) => {
+  e.preventDefault();
+  const values = getFormValues();
+  const errors = validateBookForm(values);
+
+  errTitleEl.textContent = errors.title || "";
+  errAuthorEl.textContent = errors.author || "";
+  errGenreEl.textContent = errors.genre || "";
+  errYearEl.textContent = errors.year || "";
+
+  if (Object.keys(errors).length > 0) return;
+
+  try {
+    const createdBook = await createBookOnServer({
+      title: values.title.trim(),
+      author: values.author.trim(),
+      genre: values.genre,
+      year: Number(values.year),
+    });
+
+    allBooks.unshift(createdBook);
+    renderGenreOptions(allBooks, genreFilterEl, genreInputEl);
+    renderFilteredBooks();
+
+    addFormEl.reset();
+    errTitleEl.textContent = "";
+    errAuthorEl.textContent = "";
+    errGenreEl.textContent = "";
+    errYearEl.textContent = "";
+  } catch (err) {
+    alert((err as Error).message);
+  }
+});
+
+// Tìm kiếm & lọc kết hợp
+searchInputEl.addEventListener("input", renderFilteredBooks);
+genreFilterEl.addEventListener("change", renderFilteredBooks);
+
+// Event Delegation cho nút Yêu thích và Xóa
+bookListEl.addEventListener("click", async (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  const button = target.closest("button[data-action]") as HTMLButtonElement | null;
+  if (!button) return;
+
+  const card = button.closest(".book-card") as HTMLElement | null;
+  const bookId = card?.dataset.id;
+  if (!bookId) return;
+
+  const action = button.dataset.action;
+
+  if (action === "favorite") {
+    if (favoriteIds.has(bookId)) {
+      favoriteIds.delete(bookId);
+    } else {
+      favoriteIds.add(bookId);
+    }
+    saveFavorites(favoriteIds);
+    updateFavHeader();
+    renderFilteredBooks();
+  }
+
+  if (action === "delete") {
+    const targetBook = allBooks.find((b) => b.id === bookId);
+    const confirmed = window.confirm(
+      `Bạn có chắc chắn muốn xóa cuốn sách "${targetBook?.title || bookId}"?`
+    );
+    if (!confirmed) return;
+
+    try {
+      await deleteBookOnServer(bookId);
+      allBooks = allBooks.filter((b) => b.id !== bookId);
+      favoriteIds.delete(bookId);
+      saveFavorites(favoriteIds);
+
+      renderGenreOptions(allBooks, genreFilterEl, genreInputEl);
+      updateFavHeader();
+      renderFilteredBooks();
+    } catch (err) {
+      alert((err as Error).message);
+    }
+  }
+});
+
+// Khởi chạy ứng dụng
+async function init(): Promise<void> {
+  statusBarEl.textContent = "Đang tải...";
+  try {
+    allBooks = await fetchBooks();
+    renderGenreOptions(allBooks, genreFilterEl, genreInputEl);
+    updateFavHeader();
+    renderFilteredBooks();
+  } catch (err) {
+    statusBarEl.classList.add("error");
+    statusBarEl.textContent = `Lỗi: ${(err as Error).message}`;
+  }
+}
+
+init();
