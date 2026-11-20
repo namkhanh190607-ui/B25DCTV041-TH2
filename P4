@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thư Viện Của Lớp - Phần A</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="/src/main.ts"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1>📚 Thư Viện Của Lớp</h1>
+      <div class="fav-badge">
+        ❤️ Sách yêu thích: <strong id="fav-count">0</strong>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- FORM THÊM SÁCH MỚI -->
+    <section class="panel" aria-labelledby="form-heading">
+      <h2 id="form-heading">Thêm sách mới</h2>
+      <form id="add-book-form" class="book-form" novalidate>
+        <div class="form-group">
+          <label for="book-title">Tên sách *</label>
+          <input type="text" id="book-title" placeholder="Nhập tên sách (>= 3 ký tự)..." />
+          <small class="error-msg" id="error-title"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="book-author">Tác giả *</label>
+          <input type="text" id="book-author" placeholder="Nhập tên tác giả..." />
+          <small class="error-msg" id="error-author"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="book-genre">Thể loại *</label>
+          <select id="book-genre">
+            <option value="">-- Chọn thể loại --</option>
+          </select>
+          <small class="error-msg" id="error-genre"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="book-year">Năm xuất bản *</label>
+          <input type="number" id="book-year" placeholder="VD: 2024" />
+          <small class="error-msg" id="error-year"></small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">+ Thêm sách</button>
+      </form>
+    </section>
+
+    <!-- THANH CÔNG CỤ & DANH SÁCH SÁCH -->
+    <section class="panel" aria-labelledby="list-heading">
+      <h2 id="list-heading">Danh mục sách</h2>
+
+      <div class="toolbar">
+        <input
+          type="text"
+          id="search-input"
+          class="search-box"
+          placeholder="Tìm kiếm theo tên sách..."
+          aria-label="Tìm kiếm theo tên sách"
+        />
+        <select id="genre-filter" class="filter-select" aria-label="Lọc theo thể loại">
+          <option value="all">Tất cả thể loại</option>
+        </select>
+      </div>
+
+      <p id="status-bar" class="status-bar">Đang tải...</p>
+
+      <div id="book-list" class="book-grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Ứng dụng Quản lý Thư viện Lớp học — LTW Bài thực hành 02</p>
+    </div>
+  </footer>
+</body>
+</html>
